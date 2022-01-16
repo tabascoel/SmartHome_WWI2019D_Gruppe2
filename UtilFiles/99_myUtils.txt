@@ -1,0 +1,52 @@
+##############################################
+# $Id: myUtilsTemplate.pm 21509 2020-03-25 11:20:51Z rudolfkoenig $
+#
+# Save this file as 99_myUtils.pm, and create your own functions in the new
+# file. They are then available in every Perl expression.
+
+package main;
+
+use strict;
+use warnings;
+
+sub
+myUtils_Initialize($$)
+{
+  my ($hash) = @_;
+}
+
+# Enter you functions below _this_ line.
+
+
+# Funktion zur Anwesenheitserkennung
+sub checkAllFritzMACpresent($) {
+  # Benötigt: nur die zu suchende MAC ($MAC),
+  # Es werden alle Instanzen vom Type FRITZBOX abgefragt
+  #
+  # Rückgabe: 1 = Gerät gefunden
+  #           0 = Gerät nicht gefunden
+  my ($MAC) = @_;
+  # Wird in keiner Instanz die MAC Adresse gefunden bleibt der Status 0
+  my $Status = 0;
+  $MAC =~ tr/:/_/;
+  $MAC = "mac_".uc($MAC);
+  my @FBS = devspec2array("TYPE=FRITZBOX");
+    foreach( @FBS ) {
+        my $StatusFritz = ReadingsVal($_, $MAC, "weg");
+        if ($StatusFritz eq "weg") {
+            # Dieser Zweig testet ob das Reading vorhanden ist
+            } elsif ($StatusFritz eq "inactive") {
+            # Dieser Zweig testet ob im Reading inactive steht
+            } elsif ($StatusFritz =~ /(.*)s, 0/) {
+            # Dieser Zweig testet auf "<geraetename> (WLAN, 0 / 0 Mbit/s, 0)"
+        } else { $Status = 1}
+    }
+  return $Status
+}
+
+#######################################
+
+
+
+###########################################################
+1;

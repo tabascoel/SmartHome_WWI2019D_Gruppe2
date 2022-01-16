@@ -1,0 +1,117 @@
+##############################################
+# Hier sind die Funktionen abgelegt, die zur Umsetzung der
+# Aufgabe 2.4.1 benoetigt werden.
+
+package main;
+
+use strict;
+use warnings;
+
+sub
+myUtils_241_Initialize($$)
+{
+  my ($hash) = @_;
+}
+
+# Enter your functions below here
+
+################################################
+# Usecase #4: Modus Anwesenheit
+
+sub modusAnwesenheit($$$) {
+	# Log(1 , "Subroutine modusAnwesenheit gestartet!");
+	
+	# Aktuelle Zeit abfragen
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+	
+	# Parameter abspeichern
+	my ($device, $start, $end) = @_;  ## 17 , 7
+	
+	Log(1 , "Startzeit = $start, Endzeit = $end");
+	
+	# Liste der PRESENCE-Devices abholen
+	my @phones = devspec2array("TYPE=PRESENCE");
+	
+	Log(1 , "Devices found: @phones");
+	
+	# Ueberpruefen, ob der aktuelle Wochentag und die aktuelle Uhrzeit innerhalb der Betriebszeiten ist
+	if ( ($wday = 1 && $hour >= $start) || ($wday > 1 && $wday < 5 && ($hour >= $start || $hour < $end)) || ($wday = 5 && $hour < $end) ) {
+	
+			my $switch = 0;
+			
+			# Liste durchgehen
+			foreach( @phones ) {
+				Log(1 , "ForEach gestartet.");
+				Log(1 , "Aktuelles Element = $_");
+		
+				# Status des aktuellen Devices auslesen
+				my $status = ReadingsVal($_, "presence", "absent");
+				Log(1 , "Status des aktuellen Geräts = $status");
+				
+				# Status ueberpruefen und wenn "present" Licht anschalten
+				if($status ne "present") {
+					Log(1 , "Aktuelles Gerät nicht anwesend.");
+					
+				} else {
+					Log(1 , "Aktuelles Gerät anwesend.");
+					$switch = 1;
+				}		
+			}
+			
+			if($switch == 1) {
+				{fhem("set $device on")}
+			} else {
+				{fhem("set $device off")}
+			}
+	} else {
+		{fhem("set $device off")}
+	}
+}
+
+# Gibt ausgehend von der uebergebenen Zahl zwischen 0 (Sonntag) 
+# und 6 (Samstag) den entsprechenden Wochentag als String zurueck.
+sub tagParsen($) {
+
+	my $day = @_[0];
+	
+#	Log(1 , "Input = $day.");
+	
+	if($day == 0) {
+		return "Sonntag";
+	} elsif($day == 1) {
+		return "Monatg";
+	} elsif($day == 2) {
+		return "Dienstag";
+	} elsif($day == 3) {
+		return "Mittwoch";
+	} elsif($day == 4) {
+		return "Donnerstag";
+	} elsif($day == 5) {
+		return "Freitag";
+	} elsif($day == 1) {
+		return "Samstag";
+	} else {
+		return "Invalid input";
+	}
+}
+
+## Ueberprueft, ob die aktuelle Zeit im uebergebenen Zeitintervall ist.
+sub checkTime($$$) {
+	Log(1 , "checkTime started.");
+	
+	my ($device, $start, $end) = @_;
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+	
+	Log(1 , "$device, $start, $end, $hour");
+	
+	if ($hour >= $start || $hour < $end) {
+		Log(1 , "Setting $device on.");
+		{fhem("set $device on")}
+	} elsif ($hour < $start && $hour >= $end) {
+		Log(1 , "Setting $device off.");
+		{fhem("set $device off")}
+	}
+}
+
+# Enter your functions above here
+1;

@@ -1,0 +1,126 @@
+##############################################
+# $Id: myUtilsTemplate.pm 21509 2020-03-25 11:20:51Z rudolfkoenig $
+#
+# Save this file as 99_myUtils.pm, and create your own functions in the new
+# file. They are then available in every Perl expression.
+
+package main;
+
+use strict;
+use warnings;
+use Time::Piece;
+use DateTime::Format::Strptime;
+
+sub
+myUtils_243_Initialize($$)
+{
+  my ($hash) = @_;
+}
+
+# Enter you functions below _this_ line.
+
+sub modusStromwerttabelle() {
+	#Log(1, "Subroutine modusStromwerttabelle gestartet!");
+	
+	# Aktuelle Zeit abfragen
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+	my $currTime = localtime();
+	
+	my $modus = ReadingsVal("a_boiler_stromwert", "modus", "0");
+	#Log(1, "Aktueller Modus: $modus");
+	
+	if($wday < 1 || $wday > 5) {
+		my $we_on = getDate(ReadingsVal("stromwerttabelle", "we_on","00:00"));
+		my $we_off = getDate(ReadingsVal("stromwerttabelle", "we_off","24:00"));
+		my $we = ReadingsVal("stromwerttabelle", "we", "2");
+		
+		if($currTime >= $we_on && $currTime < $we_off) {
+			
+			if($modus >= $we) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		}
+	} else {
+		my $t1_on = getDate(ReadingsVal("stromwerttabelle", "t1_on", "00:00"));
+		my $t1_off = getDate(ReadingsVal("stromwerttabelle", "t1_off", "00:00"));
+		my $t1 = ReadingsVal("stromwerttabelle", "t1", "2");
+		
+		my $t2_on = getDate(ReadingsVal("stromwerttabelle", "t2_on", "08:00"));
+		my $t2_off = getDate(ReadingsVal("stromwerttabelle", "t1_off", "08:00"));
+		my $t2 = ReadingsVal("stromwerttabelle", "t2", "2");
+		
+		my $t3_on = getDate(ReadingsVal("stromwerttabelle", "t3_on", "10:00"));
+		my $t3_off = getDate(ReadingsVal("stromwerttabelle", "t3_off", "14:00"));
+		my $t3 = ReadingsVal("stromwerttabelle", "t3", "2");
+		
+		my $t4_on = getDate(ReadingsVal("stromwerttabelle", "t4_on", "14:00"));
+		my $t4_off = getDate(ReadingsVal("stromwerttabelle", "t4_off", "18:00"));
+		my $t4 = ReadingsVal("stromwerttabelle", "t4", "2");
+		
+		my $t5_on = getDate(ReadingsVal("stromwerttabelle", "t5_on", "18:00"));
+		my $t5_off = getDate(ReadingsVal("stromwerttabelle", "t5_off", "22:00"));
+		my $t5 = ReadingsVal("stromwerttabelle", "t5", "2");
+		
+		my $t6_on = getDate(ReadingsVal("stromwerttabelle", "t6_on", "22:00"));
+		my $t6_off = getDate(ReadingsVal("stromwerttabelle", "t6_off", "24:00"));
+		my $t6 = ReadingsVal("stromwerttabelle", "t6", "2");
+		
+		if ($currTime >= $t1_on && $currTime < $t1_off) {
+			if($modus >= $t1) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		} elsif ($currTime >= $t2_on && $currTime < $t2_off) {
+			if($modus >= $t2) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		} elsif ($currTime >= $t3_on && $currTime < $t3_off) {
+			if($modus >= $t3) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		} elsif ($currTime >= $t4_on && $currTime < $t4_off) {
+			if($modus >= $t4) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		} elsif ($currTime >= $t5_on && $currTime < $t5_off) {
+			if($modus >= $t5) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		} elsif ($currTime >= $t6_on && $currTime < $t6_off) {
+			if($modus >= $t6) {
+				{fhem("set wasserBoiler on")}
+			} else {
+				{fhem("set wasserBoiler off")}
+			}
+		} else {
+			{fhem("set wasserBoiler off")}
+		}
+	}
+}
+
+sub getDate($) {
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+	
+	my $input = @_[0];
+	
+	$year = $year + 1900;
+	$mon = $mon + 1;
+	my $date_string = "$year-$mon-$mday $input";
+	
+	my $return = Time::Piece->strptime($date_string, "%F %R");
+	
+	return $return;
+}
+
+1;
