@@ -1,7 +1,7 @@
 # SmartHome WWI2019D Gruppe2
 
-In diesem Repository ist die Dokumentation und die Schritt-für-Schritt-Anleitung des Home Automation Projekts der Gruppe 2
-im Rahmen des Studiengangs Wirtschaftsinformatik an der DHBW Stuttgart zu finden.
+In diesem Repository ist die Dokumentation und die Schritt-für-Schritt-Anleitung des SmartHome Automation Projekts der Gruppe 2
+des Kurses WWI2019D der DHBW Stuttgart zu finden.
 
 ## Projektdokumentation
 
