@@ -11,7 +11,6 @@ Die Projektdokumentation ist unter folgendem Link zu finden:
 
 ## Schritt-für-Schritt-Anleitung
 
-Im nachfolgenden wird ein grober Überblick über die Schritte, die zum Einrichten unserer Home Automation Lösung benötigt werden, gegeben.
 Die genauen Schritte sind in den jeweiligen Dokumenten aufgeführt.
 
 **[Schritt-Für-Schritt-Anleitung](https://github.com/tabascoel/SmartHome_WWI2019D_Gruppe2/tree/main/Schritt-F%C3%BCr-Schritt-Anleitung)**
